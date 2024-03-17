@@ -6,7 +6,7 @@ class SetupDevice():
         self.client = client
         self.in_setup = False
         self.on_setup_end = on_setup_end
-        self.setup_text = 'Please continue the setup on your phone.\n1. Pair bluetooth with "safeguard"\n2. Open the Safeguard app and\n   and follow the instructions\n'
+        self.setup_text = 'Please continue the setup on your phone.\n1. Pair bluetooth with "equalsafe"\n2. Open the EqualSafe app\n    and follow the instructions\n'
 
     def __wifi_connected(self, topic, ctx, msg):
         print('SetupDevice wifi connected')
