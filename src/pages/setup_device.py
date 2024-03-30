@@ -14,7 +14,7 @@ class SetupDevicePage():
 
     def setup(self):
         text_label = QLabel(self.app.device_setup.setup_text)
-        text_label.setStyleSheet("QLabel { color: white; font-size: 14px; }")
+        text_label.setStyleSheet("QLabel { color: white; font-size: 28px; }")
 
         settings_button = SettingButton('Cancel Setup', self.exit_device_setup, '#d52222')
 

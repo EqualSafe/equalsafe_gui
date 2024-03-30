@@ -14,7 +14,7 @@ class FeatureButton(QPushButton):
             QPushButton {
                 background-color: #555555;
                 color: white;
-                border-radius: 10px;
+                border-radius: 20px;
                 text-align: center;
                 font-size: 28px;
                 font-weight: 600;
@@ -22,16 +22,19 @@ class FeatureButton(QPushButton):
             QPushButton:pressed {
                 background-color: #333333;
             }
+            QPushButton:focus {
+                outline: none;
+            }
         """)
         self.indicator = QLabel(self)
-        self.indicator.setFixedSize(10, 10)
-        self.indicator.move(self.width() - 15, 5)
-        self.indicator.setStyleSheet("QLabel { background-color: %s; border-radius: 5px; }" % '#ff2222')
+        self.indicator.setFixedSize(20, 20)
+        self.indicator.move(self.width() - 30, 10)
+        self.indicator.setStyleSheet("QLabel { background-color: %s; border-radius: 10px; }" % '#ff2222')
         self.update_status_indicator(False)
 
     def update_status_indicator(self, value):
         color = '#00ff55' if value else '#ff2222'
-        self.indicator.setStyleSheet("QLabel { background-color: %s; border-radius: 5px; }" % color)
+        self.indicator.setStyleSheet("QLabel { background-color: %s; border-radius: 10px; }" % color)
 
 
 class SettingButton(QPushButton):
@@ -44,12 +47,15 @@ class SettingButton(QPushButton):
             QPushButton {
                 background-color: %s;
                 color: white;
-                border-radius: 10px;
+                border-radius: 20px;
                 text-align: center;
-                font-size: 30px;
+                font-size: 28px;
                 font-weight: 600;
             }
             QPushButton:pressed {
                 background-color: #333333;
+            }
+            QPushButton:focus {
+                outline: none;
             }
         """ % self.color)
