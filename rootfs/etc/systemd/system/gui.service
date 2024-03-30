@@ -1,0 +1,14 @@
+[Unit]
+Description=GUI Service for Device
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/share/device_gui/run.sh
+WorkingDirectory=/usr/share/device_gui
+User=root
+Group=root
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

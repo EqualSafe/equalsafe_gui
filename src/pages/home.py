@@ -15,7 +15,7 @@ class HomePage():
     def setup(self):
         # # Screen Placeholder
         screen_placeholder = QLabel()
-        screen_placeholder.setFixedSize(QSize(280, 160))
+        screen_placeholder.setFixedSize(QSize(460, 200))
         screen_placeholder.setStyleSheet("background-color: gray; border-radius: 10px;")
         self.layout.addWidget(screen_placeholder, alignment=Qt.AlignCenter)
 

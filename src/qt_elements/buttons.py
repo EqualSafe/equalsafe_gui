@@ -8,7 +8,7 @@ class FeatureButton(QPushButton):
     def __init__(self, text, action, status_function, *args, **kwargs):
         super().__init__(text, *args, **kwargs)
         self.status_function = status_function
-        self.setFixedSize(QSize(130, 50))
+        self.setFixedSize(QSize(220, 100))
         self.clicked.connect(action)
         self.setStyleSheet("""
             QPushButton {
@@ -16,7 +16,7 @@ class FeatureButton(QPushButton):
                 color: white;
                 border-radius: 10px;
                 text-align: center;
-                font-size: 16px;
+                font-size: 28px;
                 font-weight: 600;
             }
             QPushButton:pressed {
@@ -38,7 +38,7 @@ class SettingButton(QPushButton):
     def __init__(self, text, action, custom_color='#555555', *args, **kwargs):
         super().__init__(text, *args, **kwargs)
         self.color = custom_color
-        self.setFixedSize(QSize(280, 50))
+        self.setFixedSize(QSize(460, 100))
         self.clicked.connect(action)
         self.setStyleSheet("""
             QPushButton {
@@ -46,7 +46,7 @@ class SettingButton(QPushButton):
                 color: white;
                 border-radius: 10px;
                 text-align: center;
-                font-size: 16px;
+                font-size: 30px;
                 font-weight: 600;
             }
             QPushButton:pressed {

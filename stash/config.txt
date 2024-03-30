@@ -1,0 +1,20 @@
+# For 0 degree rotation:
+# (no additional entries - default setting)
+
+# For 90 degree rotation (top to right):
+#display_lcd_rotate=1
+#dtoverlay=rpi-ft5406,touchscreen-swapped-x-y=1,touchscreen-inverted-x=1
+
+# For 180 degree rotation (upside down)
+#display_lcd_rotate=2
+#dtoverlay=rpi-ft5406,touchscreen-inverted-x=1,touchscreen-inverted-y=1
+
+# For 270 degree rotation (top to left)
+#display_lcd_rotate=3
+#dtoverlay=rpi-ft5406,touchscreen-swapped-x-y=1,touchscreen-inverted-y=1
+
+
+### REMOVE THE tty1 from /boot/cmd...
+
+## cmdline.txt:
+# console=serial0,115200 root=PARTUUID=60294ac7-02 rootfstype=ext4 fsck.repair=yes rootwait logo.nologo quiet modules-load=dwc2,g_ether
