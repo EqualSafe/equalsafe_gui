@@ -1,18 +1,23 @@
 import sys
 from src.qt_elements.buttons import (FeatureButton, SettingButton)
 from src.mqtt_client import Client
+# BACKEND
 from src.backend.wifi import Wifi
 from src.backend.setup_device import SetupDevice
+# PAGES
 from src.pages.home import HomePage
 from src.pages.settings import SettingsPage
 from src.pages.setup_device import SetupDevicePage
 from src.pages.system_info import SystemInfoPage
+from src.pages.wifi_settings import WifiSettingsPage
+from src.pages.wifi_known_networks import WifiKnownNetworksPage
+from src.pages.wifi_available_networks import WifiAvailableNetworksPage
+from src.pages.wifi_add_network import WifiAddNetworkPage
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QVBoxLayout, QLabel, QFrame,
                              QGridLayout, QWidget, QStackedWidget)
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon, QPixmap
-
 
 
 class App(QMainWindow):
@@ -63,13 +68,31 @@ class App(QMainWindow):
         self.system_info_page = SystemInfoPage(self)
         self.system_info_page.setup()
 
+        # Wifi Settings
+        self.wifi_settings_page = WifiSettingsPage(self)
+        self.wifi_settings_page.setup()
+
+        # WifiKnownNetworks
+        self.wifi_known_networks_page = WifiKnownNetworksPage(self)
+        self.wifi_known_networks_page.setup()
+
+        # WifiAvailableNetworks
+        self.wifi_available_networks_page = WifiAvailableNetworksPage(self)
+        self.wifi_available_networks_page.setup()
+
+        # WifiAddNetwork
+        self.wifi_add_network_page = WifiAddNetworkPage(self)
+        self.wifi_add_network_page.setup()
+
         # Add widgets to the stacked widget
         self.stacked_widget.addWidget(self.home_page.widget)
         self.stacked_widget.addWidget(self.settings_page.widget)
         self.stacked_widget.addWidget(self.setup_device_page.widget)
         self.stacked_widget.addWidget(self.system_info_page.widget)
-
-
+        self.stacked_widget.addWidget(self.wifi_settings_page.widget)
+        self.stacked_widget.addWidget(self.wifi_known_networks_page.widget)
+        self.stacked_widget.addWidget(self.wifi_available_networks_page.widget)
+        self.stacked_widget.addWidget(self.wifi_add_network_page.widget)
 
     def do_something(self):
         print('CHANGE ME TO AN ACTUAL ACTION...')
@@ -94,6 +117,19 @@ class App(QMainWindow):
 
     def show_info_menu(self):
         self.stacked_widget.setCurrentWidget(self.system_info_page.widget)
+
+    def show_wifi_settings_page(self):
+        self.stacked_widget.setCurrentWidget(self.wifi_settings_page.widget)
+
+    def show_wifi_known_networks_page(self):
+        self.stacked_widget.setCurrentWidget(self.wifi_known_networks_page.widget)
+
+    def show_wifi_available_networks_page(self):
+        self.stacked_widget.setCurrentWidget(self.wifi_available_networks_page.widget)
+
+    def show_wifi_add_network_page(self):
+        self.stacked_widget.setCurrentWidget(self.wifi_add_network_page.widget)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

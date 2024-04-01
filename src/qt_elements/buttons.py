@@ -59,3 +59,46 @@ class SettingButton(QPushButton):
                 outline: none;
             }
         """ % self.color)
+
+class ListButton(QPushButton):
+    def __init__(self, icon_path, text, info, action, *args, **kwargs):
+        super().__init__(text, *args, **kwargs)
+        self.setFixedSize(QSize(440, 100))
+        self.clicked.connect(self.callback)
+        self.action = action
+        self.icon_path = icon_path
+        self.info = info
+        self.setup_button_style()
+
+    def setup_button_style(self):
+        self.setStyleSheet("""
+            QPushButton {
+                color: white;
+                text-align: left;
+                padding-left: 20px;
+                font-size: 28px;
+                font-weight: 600;
+            }
+            QPushButton:pressed {
+                background-color: #333333;
+            }
+            QPushButton:focus {
+                outline: none;
+            }
+        """)
+        self.setIcon(QIcon(self.icon_path))
+        self.setIconSize(QSize(50, 50))
+        self.setLayoutDirection(Qt.RightToLeft)  # Icon on the right
+
+    def callback(self):
+        self.action(self.info)
+
+class AddButton(ListButton):
+    def __init__(self, text, info, action, *args, **kwargs):
+        # Assuming the add icon is located at 'icons/add_icon.png' within the application's directory structure.
+        super().__init__('images/plus_icon_green.png', text, info, action, *args, **kwargs)
+
+class RemoveButton(ListButton):
+    def __init__(self, text, info, action, *args, **kwargs):
+        # Assuming the remove icon is located at 'icons/remove_icon.png' within the application's directory structure.
+        super().__init__('images/minus_icon_red.png', text, info, action, *args, **kwargs)

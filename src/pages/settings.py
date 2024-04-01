@@ -14,8 +14,8 @@ class SettingsPage():
 
     def setup(self):
         setup_button = SettingButton('Setup Device', self.app.setup_device_page.enter_device_setup)
-        wifi_button = SettingButton('Wifi Networks', self.app.show_home_page)
-        bluetooth_button = SettingButton('Bluetooth Devices', self.app.show_home_page)
+        wifi_button = SettingButton('Wifi Settings', self.app.show_wifi_settings_page)
+        bluetooth_button = SettingButton('Bluetooth Settings', self.app.show_home_page)
         info_button = SettingButton('System Info', self.app.show_info_menu)
         home_button = SettingButton('Home', self.app.show_home_page)
 
