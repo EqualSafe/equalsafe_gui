@@ -3,6 +3,8 @@ import random
 import socket
 import paho.mqtt.client as mqtt
 import re
+import json
+import time
 
 class Client:
     def __init__(self, ip, password, udata):
@@ -14,14 +16,39 @@ class Client:
         self.__mqtt_client = None
         self.__user_data = udata
         self.on_connect = None
+        self.__callbacks = {}
 
     def __generate_id(self, ip=None):
         ip = ip or self.__device_ip or str(random.randint(10000, 99999))
         return f"{ip.replace('.','')}_{random.randint(1000, 9999)}"
 
-    def __default_on_msg(self, topic, msg):
-        if topic in self.__subscribers:
-            self.__subscribers[topic](topic, msg)
+    def __match_topic(self, topic, sub):
+        sub_parts = sub.split('/')
+        topic_parts = topic.split('/')
+
+        for i in range(len(sub_parts)):
+            if sub_parts[i] == '#':
+                return True
+            if i >= len(topic_parts) or (sub_parts[i] != '+' and sub_parts[i] != topic_parts[i]):
+                return False
+            elif sub_parts[i] == '+':
+                continue
+        if len(sub_parts) < len(topic_parts) and sub_parts[-1] != '#':
+            return False
+
+        return True
+
+    def __default_on_msg(self, client, userdata, msg, *_):
+        topic = msg.topic
+        payload = {}
+        try:
+            payload = json.loads(msg.payload)
+        except Exception as e:
+            print(topic, 'not a valid json payload')
+        for sub_topic in self.__callbacks:
+            if self.__match_topic(topic, sub_topic):
+                for callback in self.__callbacks[sub_topic]:
+                    callback(topic, payload)
 
     def __on_connect(self, client, userdata, flags, rc, *_):
         if not self.on_connect:
@@ -110,7 +137,7 @@ class Client:
         if not self.__mqtt_client.is_connected():
             return False, "MQTT not connected"
 
-        self.__mqtt_client.publish(topic=topic, payload=payload)
+        self.__mqtt_client.publish(topic=topic, payload=json.dumps(payload))
         return True
 
     def subscribe(self, topic, callback) -> bool:
@@ -122,11 +149,14 @@ class Client:
         if not self.__mqtt_client.is_connected():
             return False, "MQTT not connected"
 
-        self.__mqtt_client.subscribe(topic=topic)
-        self.__mqtt_client.message_callback_add(sub=topic, callback=callback)
+        if not self.__callbacks.get(topic):
+            self.__callbacks[topic] = []
+            self.__mqtt_client.subscribe(topic=topic)
+
+        self.__callbacks[topic].append(callback)
         return True
 
-    def unsubscribe(self, topic):
+    def unsubscribe(self, topic, callback):
         '''
             unsubscibes from a topic and removes all the callbacks
             returns:
@@ -135,6 +165,12 @@ class Client:
         if not self.__mqtt_client.is_connected():
             return False, "MQTT not connected"
 
-        self.__mqtt_client.unsubscribe(topic=topic)
-        self.__mqtt_client.message_callback_remove(topic)
+        if self.__callbacks.get(topic):
+            idx = self.__callbacks[topic].index(callback)
+            del self.__callbacks[topic][idx]
+
+            if len(self.__callbacks[topic]) == 0:
+                del self.__callbacks[topic]
+                self.__mqtt_client.unsubscribe(topic=topic)
+
         return True
