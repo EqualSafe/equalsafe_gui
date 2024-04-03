@@ -45,12 +45,9 @@ class Client:
             payload = json.loads(msg.payload)
         except Exception as e:
             print(topic, 'not a valid json payload')
-            return
-
-        callbacks_copy = self.__callbacks.copy()
-        for sub_topic in callbacks_copy:
+        for sub_topic in self.__callbacks:
             if self.__match_topic(topic, sub_topic):
-                for callback in callbacks_copy[sub_topic]:
+                for callback in self.__callbacks[sub_topic]:
                     callback(topic, payload)
 
     def __on_connect(self, client, userdata, flags, rc, *_):

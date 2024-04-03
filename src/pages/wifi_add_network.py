@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 from src.qt_elements.buttons import (FeatureButton, SettingButton)
 from src.qt_elements.keyboard import QwertyKeyboard
+import time
 
 stylesheet = f"""
 QLabel {{
@@ -97,8 +98,15 @@ class WifiAddNetworkPage:
         self.password_input.setText(password)
 
     def add_network(self):
-        print({
-            'ssid': self.ssid_input.text(),
-            'password': self.password_input.text()
-        })
-        self.app.show_wifi_settings_page()
+        req_id = str(int(time.time()))
+        req_topic = f'System/wifi/add_network/{req_id}'
+
+        payload = {}
+        ssid = self.ssid_input.text()
+        password = self.password_input.text()
+        if ssid and ssid != '':
+            payload['ssid'] = ssid
+            if password and password != '':
+                payload['password'] = password
+            self.app.client.publish(f'{req_topic}', payload)
+            self.app.show_wifi_settings_page()

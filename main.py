@@ -122,9 +122,11 @@ class App(QMainWindow):
         self.stacked_widget.setCurrentWidget(self.wifi_settings_page.widget)
 
     def show_wifi_known_networks_page(self):
+        self.wifi_known_networks_page.refresh_networks()
         self.stacked_widget.setCurrentWidget(self.wifi_known_networks_page.widget)
 
     def show_wifi_available_networks_page(self):
+        self.wifi_available_networks_page.refresh_networks()
         self.stacked_widget.setCurrentWidget(self.wifi_available_networks_page.widget)
 
     def show_wifi_add_network_page(self):

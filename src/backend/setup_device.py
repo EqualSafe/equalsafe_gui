@@ -8,10 +8,9 @@ class SetupDevice():
         self.on_setup_end = on_setup_end
         self.setup_text = 'Please continue the setup on your phone.\n1. Pair bluetooth with "equalsafe"\n2. Open the EqualSafe app\n    and follow the instructions\n'
 
-    def __wifi_connected(self, topic, ctx, msg):
+    def __wifi_connected(self, topic, payload):
         print('SetupDevice wifi connected')
-        payload = json.loads(msg.payload)
-        if payload.get('status') == 'connected':
+        if payload.get('state') == 'running':
             self.stop_setup()
             self.on_setup_end()
 
@@ -38,7 +37,7 @@ class SetupDevice():
             return False
 
         self.in_setup = False
-        self.client.unsubscribe('System/wifi/Info')
+        self.client.unsubscribe('System/wifi/Info', self.__wifi_connected)
         self.client.publish('System/bluetooth/stop/1111', '{}')
 
         return True
