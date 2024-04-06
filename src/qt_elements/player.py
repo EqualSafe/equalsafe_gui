@@ -29,6 +29,7 @@ class VideoPlayer(QWidget):
         self.backgroundWidget.setStyleSheet("""
             QWidget {
                 background-color: #444444;
+                border-radius: 20px;
             }
             """)
 
