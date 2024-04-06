@@ -1,6 +1,8 @@
 sudo apt install \
     python3 \
     python3-pip \
+    python3-pyqt5.qtmultimedia \
+    libqt5multimedia5-plugins \
     fbi
 
 pip3 install \

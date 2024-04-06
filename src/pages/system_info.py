@@ -14,16 +14,16 @@ class SystemInfoPage():
         self.app = app
 
     def setup(self):
-        text_label = QLabel('EqualSafe\nAll rights reserved\n\nversion: %s\nserial: ES000001' % self.app.app_version)
-        text_label.setStyleSheet("QLabel { color: white; font-size: 28px; }")
+        text_label = QLabel('EqualSafe OS\nAll rights reserved\n\nversion: %s\nserial: ES000001' % self.app.app_version)
+        text_label.setStyleSheet("QLabel { color: white; font-size: 20px; }")
+        check_for_updates_button = SettingButton('Check for updates', self.app.show_settings_page, '#308d46')
         reboot_device_button = SettingButton('Reboot', reboot_device, '#e9950c')
-        unlink_device_button = SettingButton('Unlink Device', self.app.show_settings_page, '#e9950c')
         factory_reset_button = SettingButton('Factory reset', self.app.show_settings_page, '#d52222')
         settings_button = SettingButton('Settings', self.app.show_settings_page)
 
         self.layout.addWidget(text_label, alignment=Qt.AlignCenter)
+        self.layout.addWidget(check_for_updates_button, alignment=Qt.AlignHCenter)
         self.layout.addWidget(reboot_device_button, alignment=Qt.AlignHCenter)
-        self.layout.addWidget(unlink_device_button, alignment=Qt.AlignHCenter)
         self.layout.addWidget(factory_reset_button, alignment=Qt.AlignHCenter)
         self.layout.addWidget(settings_button, alignment=Qt.AlignBottom|Qt.AlignHCenter)
 

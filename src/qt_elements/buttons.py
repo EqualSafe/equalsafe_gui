@@ -8,7 +8,7 @@ class FeatureButton(QPushButton):
     def __init__(self, text, action, status_function, *args, **kwargs):
         super().__init__(text, *args, **kwargs)
         self.status_function = status_function
-        self.setFixedSize(QSize(220, 100))
+        self.setFixedSize(QSize(210, 150))
         self.clicked.connect(action)
         self.setStyleSheet("""
             QPushButton {
@@ -35,6 +35,12 @@ class FeatureButton(QPushButton):
     def update_status_indicator(self, value):
         color = '#00ff55' if value else '#ff2222'
         self.indicator.setStyleSheet("QLabel { background-color: %s; border-radius: 10px; }" % color)
+
+class FeatureIconButton(FeatureButton):
+    def __init__(self, icon_path, action, status_function):
+        super().__init__('', action, status_function)
+        self.setIcon(QIcon(icon_path))
+        self.setIconSize(QSize(50, 50))
 
 
 class SettingButton(QPushButton):

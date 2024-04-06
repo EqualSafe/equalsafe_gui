@@ -42,7 +42,6 @@ class WifiKnownNetworksPage(QObject):
         self.layout.addWidget(back_button, alignment=Qt.AlignBottom | Qt.AlignCenter)
 
     def refresh_networks(self):
-        print('refresh networks known networks')
         req_id = str(int(time.time()))
         req_topic = f'System/wifi/list_known_networks/{req_id}'
 
@@ -57,7 +56,6 @@ class WifiKnownNetworksPage(QObject):
         self.app.client.publish(f'{req_topic}', {})
 
     def render_networks(self, network_list):
-        print(network_list)
         # Remove all existing widgets from the layout and delete them
         while self.scroll_layout.count():
             item = self.scroll_layout.takeAt(0)

@@ -3,7 +3,8 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QVBoxLayout
 
 from PyQt5.QtCore import QSize, Qt
 
-from src.qt_elements.buttons import (FeatureButton, SettingButton)
+from src.qt_elements.buttons import (FeatureButton, FeatureIconButton, SettingButton)
+from src.qt_elements.player import VideoPlayer
 
 
 class HomePage():
@@ -18,21 +19,26 @@ class HomePage():
 
     def setup(self):
         # # Screen Placeholder
-        screen_placeholder = QLabel()
-        screen_placeholder.setFixedSize(QSize(460, 200))
-        screen_placeholder.setStyleSheet("background-color: gray; border-radius: 10px;")
-        self.layout.addWidget(screen_placeholder, alignment=Qt.AlignCenter)
+        # screen_placeholder = QLabel()
+        # screen_placeholder.setFixedSize(QSize(460, 200))
+        # screen_placeholder.setStyleSheet("background-color: gray; border-radius: 10px;")
+        # self.layout.addWidget(screen_placeholder, alignment=Qt.AlignCenter)
+
+        self.videoPlayer = VideoPlayer('/tmp/video_stream.sdp')
+        self.layout.addWidget(self.videoPlayer, alignment=Qt.AlignCenter)
 
         # Grid Layout for feature buttons
         grid_layout = QGridLayout()
+        # grid_layout.setSpacing(20)
+        grid_layout.setVerticalSpacing(30)
         self.layout.addLayout(grid_layout)
 
         # Feature buttons
         self.feature_buttons = {
-            "Camera": FeatureButton("Camera", self.toggle_camera, self.get_feature_status),
-            "Lock": FeatureButton("Lock", self.toggle_deadlock, self.get_feature_status),
-            "Bluetooth": FeatureButton("Bluetooth", self.toggle_bluetooth, self.get_feature_status),
-            "Wifi": FeatureButton("Wifi", self.toggle_wifi, self.get_feature_status)
+            "Camera": FeatureIconButton('images/camera_white_64.png', self.toggle_camera, self.get_feature_status),
+            "Lock": FeatureIconButton('images/lock_white_64.png', self.toggle_deadlock, self.get_feature_status),
+            "Bluetooth": FeatureIconButton('images/bluetooth_white_64.png', self.toggle_bluetooth, self.get_feature_status),
+            "Wifi": FeatureIconButton('images/wifi_white_64.png', self.toggle_wifi, self.get_feature_status)
         }
 
         positions = [(i, j) for i in range(2) for j in range(2)]
@@ -49,7 +55,7 @@ class HomePage():
         self.app.client.subscribe('System/deadbolt/status', self.handle_deadlock_info)
 
     def handle_camera_info(self, topic, payload):
-        self.feature_buttons['Bluetooth'].update_status_indicator(True if payload.get('state') == 'running' else False)
+        self.feature_buttons['Camera'].update_status_indicator(True if payload.get('state') == 'running' else False)
         self.camera_status = True if payload.get('state') == 'running' else False
 
     def handle_bluetooth_info(self, topic, payload):

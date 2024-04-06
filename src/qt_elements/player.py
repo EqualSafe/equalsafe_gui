@@ -1,47 +1,80 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QStackedWidget, QLabel
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtCore import QUrl
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtCore import QUrl, QSize, pyqtSignal, Qt
+from PyQt5.QtGui import QColor, QPalette, QPixmap
 
 class VideoPlayer(QWidget):
-    def __init__(self):
-        super().__init__()
-        # self.setWindowTitle("PyQt Video Stream Player")
-        self.setGeometry(100, 100, 420, 360)
+    playRequested = pyqtSignal()
 
-        # Create instances of QMediaPlayer and QVideoWidget
-        self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
-        self.videoWidget = QVideoWidget()
+    def __init__(self, sdpUrl, parent=None):
+        super().__init__(parent)
+        self.sdpUrl = '/Users/omarkanj/Desktop/Projects/file1.sdp'#sdpUrl
+        self.player = QMediaPlayer(self)
+        self.stack = QStackedWidget(self)  # Use a stacked widget to layer the video and background
+        self.videoWidget = QVideoWidget(self.stack)
+        self.backgroundWidget = QWidget(self.stack)  # Widget to show when the video is not playing
+        self.initUI()
+        self.playRequested.connect(self.togglePlayback)
 
-        # Layout and buttons
-        self.playButton = QPushButton('Play')
-        self.stopButton = QPushButton('Stop')
-        self.playButton.clicked.connect(self.playVideo)
-        self.stopButton.clicked.connect(self.stopVideo)
+    def initUI(self):
+        self.setMinimumSize(QSize(460, 280))
+        self.setMaximumSize(QSize(460, 280))
+        self.layout = QVBoxLayout(self)
+        self.layout.addWidget(self.stack)
+        self.setLayout(self.layout)
 
-        # Set up layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.videoWidget)
-        layout.addWidget(self.playButton)
-        layout.addWidget(self.stopButton)
-        self.setLayout(layout)
+        # Setup background widget
+        self.backgroundWidget.setAutoFillBackground(True)
+        self.backgroundWidget.setStyleSheet("""
+            QWidget {
+                background-color: #444444;
+            }
+            """)
+
+        # Setup label with text and an icon
+        self.label = QLabel("Camera playback off\nPress to turn on", self.backgroundWidget)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setStyleSheet("color: white; margin: 15px;font-size: 20px")
+        # Set the path to your camera icon PNG file
+        self.icon = QLabel('', self.backgroundWidget)
+        iconPath = 'images/camera_white_64.png'
+        self.icon.setPixmap(QPixmap(iconPath))
+        self.icon.setWordWrap(True)
+
+        # Layout for the background widget to center the label
+        bgLayout = QVBoxLayout(self.backgroundWidget)
+        bgLayout.addWidget(self.icon, alignment=Qt.AlignCenter)
+        bgLayout.addWidget(self.label, alignment=Qt.AlignCenter)
+
+        self.backgroundWidget.setLayout(bgLayout)
+
+        self.stack.addWidget(self.backgroundWidget)  # Add background widget to stack
+        self.stack.addWidget(self.videoWidget)  # Add video widget to stack
 
         # Set the video output to the video widget
-        self.mediaPlayer.setVideoOutput(self.videoWidget)
+        self.player.setVideoOutput(self.videoWidget)
 
-    def playVideo(self):
-        # Set the media content to a stream URL
-        # Example: Replace 'your_stream_url_here' with your actual stream URL
-        streamUrl = 'udp://@localhost:8000'
-        self.mediaPlayer.setMedia(QMediaContent(QUrl(streamUrl)))
-        self.mediaPlayer.play()
+        # Load the video
+        self.loadVideo()
 
-    def stopVideo(self):
-        self.mediaPlayer.stop()
+        self.stack.setCurrentWidget(self.backgroundWidget)  # Set background widget as current
 
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     player = VideoPlayer()
-#     player.show()
-#     sys.exit(app.exec_())
+
+    def loadVideo(self):
+        content = QMediaContent(QUrl.fromLocalFile(self.sdpUrl))
+        self.player.setMedia(content)
+        self.stack.setCurrentWidget(self.videoWidget)  # Switch to video widget when video is loaded
+
+    def mousePressEvent(self, event):
+        # Emit a signal when the widget is pressed
+        self.playRequested.emit()
+
+    def togglePlayback(self):
+        if self.player.state() == QMediaPlayer.PlayingState:
+            self.player.pause()
+            self.stack.setCurrentWidget(self.backgroundWidget)  # Show the background widget
+        else:
+            self.loadVideo()
+            self.player.play()
+            self.stack.setCurrentWidget(self.videoWidget)  # Show the video widget
