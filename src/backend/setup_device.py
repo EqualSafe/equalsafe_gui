@@ -1,4 +1,5 @@
 from ..mqtt_client import Client
+import time
 import json
 
 class SetupDevice():
@@ -22,10 +23,11 @@ class SetupDevice():
 
         self.in_setup = True
 
+        req_id = str(int(time.time()))
         # Stop the wifi
-        self.client.publish('System/wifi/stop/1111', '{}')
+        self.client.publish(f'System/wifi/stop/{req_id}', {})
         # Start bluetooth
-        self.client.publish('System/bluetooth/start/1111', '{}')
+        self.client.publish(f'System/bluetooth/start/{req_id}', {})
         # wait for the bluetooth to be connected
         self.client.subscribe('System/wifi/Info', self.__wifi_connected)
 
@@ -36,8 +38,10 @@ class SetupDevice():
         if not self.in_setup:
             return False
 
+        req_id = str(int(time.time()))
         self.in_setup = False
         self.client.unsubscribe('System/wifi/Info', self.__wifi_connected)
-        self.client.publish('System/bluetooth/stop/1111', '{}')
+        self.client.publish(f'System/bluetooth/stop/{req_id}', {})
+        self.client.publish(f'System/wifi/start/{req_id}', {})
 
         return True
