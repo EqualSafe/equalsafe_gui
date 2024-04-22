@@ -6,6 +6,7 @@ sudo apt install \
     fbi
 
 pip3 install \
+    paho-mqtt \
     pyqt5
 
 # if we decide to playback the video
