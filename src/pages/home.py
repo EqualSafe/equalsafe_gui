@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QVBoxLayout
                              QGridLayout, QWidget, QStackedWidget)
 
 from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon, QPixmap
 
 from src.qt_elements.buttons import (FeatureButton, FeatureIconButton, SettingButton)
 from src.qt_elements.player import VideoPlayer
@@ -71,6 +72,12 @@ class HomePage():
         # TODO: change to be have the icon changed based on the status
         # self.feature_buttons['Lock'].setText('Unlock' if payload.get('state') == 'Locked' else 'Lock')
         self.deadlock_status = True if payload.get('state') == 'Locked' else False
+        if payload.get('state') == 'Locked':
+            self.feature_buttons['Lock'].setIcon(QIcon('images/unlock_white_70.png'))
+            self.feature_buttons['Lock'].setIconSize(QSize(50, 50))
+        else:
+            self.feature_buttons['Lock'].setIcon(QIcon('images/lock_white_64.png'))
+            self.feature_buttons['Lock'].setIconSize(QSize(50, 50))
 
     def toggle_camera(self):
         command = 'stop' if self.camera_status else 'start'
