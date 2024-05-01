@@ -68,7 +68,8 @@ class HomePage():
 
     def handle_deadlock_info(self, topic, payload):
         self.feature_buttons['Lock'].update_status_indicator(True if payload.get('state') == 'Locked' else False)
-        self.feature_buttons['Lock'].setText('Unlock' if payload.get('state') == 'Locked' else 'Lock')
+        # TODO: change to be have the icon changed based on the status
+        # self.feature_buttons['Lock'].setText('Unlock' if payload.get('state') == 'Locked' else 'Lock')
         self.deadlock_status = True if payload.get('state') == 'Locked' else False
 
     def toggle_camera(self):

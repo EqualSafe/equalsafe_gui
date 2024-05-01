@@ -63,19 +63,21 @@ class VideoPlayer(QWidget):
 
 
     def loadVideo(self):
-        content = QMediaContent(QUrl.fromLocalFile(self.sdpUrl))
-        self.player.setMedia(content)
-        self.stack.setCurrentWidget(self.videoWidget)  # Switch to video widget when video is loaded
+        # content = QMediaContent(QUrl.fromLocalFile(self.sdpUrl))
+        # self.player.setMedia(content)
+        # self.stack.setCurrentWidget(self.videoWidget)  # Switch to video widget when video is loaded
+        pass
 
     def mousePressEvent(self, event):
         # Emit a signal when the widget is pressed
         self.playRequested.emit()
 
     def togglePlayback(self):
-        if self.player.state() == QMediaPlayer.PlayingState:
-            self.player.pause()
-            self.stack.setCurrentWidget(self.backgroundWidget)  # Show the background widget
-        else:
-            self.loadVideo()
-            self.player.play()
-            self.stack.setCurrentWidget(self.videoWidget)  # Show the video widget
+        # if self.player.state() == QMediaPlayer.PlayingState:
+        #     self.player.pause()
+        #     self.stack.setCurrentWidget(self.backgroundWidget)  # Show the background widget
+        # else:
+        #     self.loadVideo()
+        #     self.player.play()
+        #     self.stack.setCurrentWidget(self.videoWidget)  # Show the video widget
+        pass
